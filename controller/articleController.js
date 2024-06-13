@@ -88,7 +88,7 @@ export async function addCommentOnArticle(res, articleId, newComment) {
         $push: { comments: newComment?._id },
       },
       { new: true }
-    );
+    ).lean();
 
     if (article === null) {
       res.status(404).json({ message: "Article not found." });
@@ -114,6 +114,40 @@ export async function deleteCommentOnArticle(res, articleId, commentId) {
     return true;
   } catch (error) {
     console.log("Error deleting comment from article:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+    return false;
+  }
+}
+
+// add like on the article
+export async function addLikeOnArticle(res, articleId, likeId) {
+  try {
+    const article = await Article.findByIdAndUpdate(articleId, {
+      $push: { likes: likeId },
+    });
+    if (article === null) {
+      res.status(404).json({ message: "Article not found." });
+    }
+    return true;
+  } catch (error) {
+    console.log("Error adding like on article:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+    return false;
+  }
+}
+
+// delete like on the article
+export async function deleteLikeFromArticle(res, articleId, likeId) {
+  try {
+    const article = await Article.findByIdAndUpdate(articleId, {
+      $pull: { likes: likeId },
+    });
+    if (article === null) {
+      res.status(404).json({ message: "Article not found." });
+    }
+    return true;
+  } catch (error) {
+    console.log("Error deleting like from article:", error);
     res.status(500).json({ message: "Internal Server Error" });
     return false;
   }

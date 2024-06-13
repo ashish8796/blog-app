@@ -10,7 +10,7 @@ export async function getCommentsByArticleId(req, res) {
   const { articleId } = req.params;
 
   try {
-    const comments = Comment.find({ articleId });
+    const comments = Comment.find({ articleId }).lean();
     res.status(200).json(comments);
   } catch (error) {
     console.log("Error fetching comments:", error);
