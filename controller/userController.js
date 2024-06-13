@@ -23,6 +23,7 @@ export async function createUser(req, res) {
     if (error.code === 11000) {
       res.status(400).json({ message: "user is already exists." });
     } else {
+      console.log("Error creating user:", error);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -41,7 +42,7 @@ export async function getUserById(req, res) {
       res.status(200).json(user);
     }
   } catch (error) {
-    console.log("Error creating user:", error);
+    console.log("Error fetching user:", error);
 
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -59,7 +60,7 @@ export async function updateUserById(req, res) {
       res.status(200).json(user);
     }
   } catch (error) {
-    console.log("Error creating user:", error);
+    console.log("Error updating user:", error);
 
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -71,7 +72,7 @@ export async function deleteUserById(req, res) {
     const user = await User.findByIdAndDelete(id);
     res.status(204);
   } catch (error) {
-    console.log("Error creating user:", error);
+    console.log("Error deleting user:", error);
 
     res.status(500).json({ message: "Internal Server Error" });
   }

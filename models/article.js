@@ -15,4 +15,6 @@ const articleSchema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Article", articleSchema);
+const Article = mongoose.model("Article", articleSchema);
+
+export default Article;
