@@ -18,9 +18,9 @@ export async function getArticleById(req, res) {
 
   try {
     const article = await Article.findById(id)
+      .lean()
       .populate("comments")
-      .exec()
-      .lean(true);
+      .exec();
 
     if (article === null) {
       res.status(404).json({ message: "Article not found." });
@@ -72,9 +72,49 @@ export async function deleteArticle(req, res) {
   const { id } = req.params;
   try {
     await Article.findByIdAndDelete(id);
-    res.status(204);
+    res.status(204).end();
   } catch (error) {
     console.log("Error deleting article:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+// Update newly created comment in the article
+export async function addCommentOnArticle(res, articleId, newComment) {
+  try {
+    const article = await Article.findByIdAndUpdate(
+      articleId,
+      {
+        $push: { comments: newComment?._id },
+      },
+      { new: true }
+    );
+
+    if (article === null) {
+      res.status(404).json({ message: "Article not found." });
+    }
+
+    return true;
+  } catch (error) {
+    console.log("Error adding comment to article:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+    return false;
+  }
+}
+
+// Delete comment from the article
+export async function deleteCommentOnArticle(res, articleId, commentId) {
+  try {
+    const article = await Article.findByIdAndUpdate(articleId, {
+      $pull: { comments: commentId },
+    });
+    if (article === null) {
+      res.status(404).json({ message: "Article not found." });
+    }
+    return true;
+  } catch (error) {
+    console.log("Error deleting comment from article:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+    return false;
   }
 }

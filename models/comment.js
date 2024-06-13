@@ -4,7 +4,7 @@ const commentSchema = new Schema(
   {
     content: {
       type: String,
-      minLength: 3,
+      required: true,
     },
     author: {
       type: Schema.Types.ObjectId,
@@ -16,4 +16,6 @@ const commentSchema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Comment", commentSchema);
+const Comment = mongoose.model("Comment", commentSchema);
+
+export default Comment;
