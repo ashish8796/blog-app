@@ -13,8 +13,4 @@ router.use("/comments", commentRouter);
 router.use("/tags", tagRouter);
 router.use("/likes", likeRouter);
 
-router.get("/", (req, res) => {
-  res.send("Welcome to my API");
-});
-
 export default router;

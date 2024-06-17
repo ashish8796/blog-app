@@ -47,7 +47,6 @@ export async function newComment(req, res) {
 
 export async function deleteCommentById(req, res) {
   const { articleId, commentId } = req.params;
-
   try {
     await Comment.findByIdAndDelete(commentId);
     const isCommentDeleted = await deleteCommentOnArticle(

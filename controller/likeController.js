@@ -1,4 +1,3 @@
-import { setResponseHeaders } from "../helper/headersHelper.js";
 import Like from "../models/like.js";
 import {
   addLikeOnArticle,

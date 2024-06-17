@@ -12,10 +12,10 @@ export async function getUsers(req, res) {
   }
 }
 
-export async function createUser(req, res) {
+export async function registerUser(req, res) {
   setResponseHeaders(res);
   try {
-    const user = await User.create(req?.body).lean();
+    const user = await User.create(req?.body);
     res.status(201).json(user);
   } catch (error) {
     console.log("Error creating user:", error);
@@ -26,6 +26,25 @@ export async function createUser(req, res) {
       console.log("Error creating user:", error);
       res.status(500).json({ message: "Internal Server Error" });
     }
+  }
+}
+
+export async function login(req, res) {
+  setResponseHeaders(res);
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user || !(await user.verifyPassword(password))) {
+      res.status(400).json({ message: "Invalid credentials" });
+    } else {
+      const token = await user.generateToken();
+      res.status(200).json({ user, token });
+    }
+  } catch (error) {
+    console.log("Error logging user: ", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
 
