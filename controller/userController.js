@@ -17,7 +17,6 @@ export async function registerUser(req, res) {
     const user = await User.create(req?.body);
     res.status(201).json(user);
   } catch (error) {
-    console.log("Error creating user:", error);
     // handling idempotency for user
     if (error.code === 11000) {
       res.status(400).json({ message: "user is already exists." });
