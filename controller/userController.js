@@ -1,15 +1,14 @@
 import { setResponseHeaders } from "../helper/headersHelper.js";
+import {
+  handleRequest,
+  handleRequestWithoutBody,
+} from "../helper/requestHelper.js";
 import User from "../models/user.js";
 
 export async function getUsers(req, res) {
-  setResponseHeaders(res);
-  try {
-    const users = await User.find().lean();
-    res.status(200).json(users);
-  } catch (error) {
-    console.log("Error fetching users:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
+  handleRequest(req, res, async () => {
+    return await User.find().lean();
+  });
 }
 
 export async function registerUser(req, res) {
@@ -49,50 +48,23 @@ export async function login(req, res) {
 }
 
 export async function getUserById(req, res) {
-  setResponseHeaders(res);
-  const { id } = req.params;
+  handleRequest(req, res, async (req) => {
+    const { id } = req.params;
 
-  try {
-    const user = await User.findById(id).lean(true);
-
-    if (user === null) {
-      res.status(404).json({ message: "User not found" });
-    } else {
-      res.status(200).json(user);
-    }
-  } catch (error) {
-    console.log("Error fetching user:", error);
-
-    res.status(500).json({ message: "Internal Server Error" });
-  }
+    return await User.findById(id).lean();
+  });
 }
 
 export async function updateUserById(req, res) {
-  setResponseHeaders(res);
-  const { id } = req.params;
-  try {
-    const user = await User.findByIdAndUpdate(id, body, { new: true }).lean(); // lean() === lean(true)
-
-    if (user === null) {
-      res.status(404).json({ message: "User not found" });
-    } else {
-      res.status(200).json(user);
-    }
-  } catch (error) {
-    console.log("Error updating user:", error);
-
-    res.status(500).json({ message: "Internal Server Error" });
-  }
+  handleRequest(req, res, async (req) => {
+    const { id } = req.params;
+    return await User.findByIdAndUpdate(id, body, { new: true }).lean(); // lean() === lean(true);
+  });
 }
 
 export async function deleteUserById(req, res) {
-  const { id } = req.params;
-  try {
-    const user = await User.findByIdAndDelete(id);
-    res.status(204);
-  } catch (error) {
-    console.log("Error deleting user:", error);
-
-    res.status(500).json({ message: "Internal Server Error" });
-  }
+  handleRequestWithoutBody(req, res, async () => {
+    const { id } = req.params;
+    return await User.findByIdAndDelete(id);
+  });
 }

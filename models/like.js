@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import Article from "./article.js";
 
 const likeSchema = new Schema(
   {
@@ -15,6 +16,38 @@ const likeSchema = new Schema(
   { timestamps: true }
 );
 
+// middleware
+likeSchema.pre("save", onCreateNewLike);
+likeSchema.pre("deleteOne", onUnlike);
+
 const Like = mongoose.model("Like", likeSchema);
+
+async function onCreateNewLike(next) {
+  try {
+    await Article.findByIdAndUpdate(this.articleId, {
+      $push: {
+        likes: this._id,
+      },
+    });
+  } catch (error) {
+    throw error;
+  } finally {
+    next();
+  }
+}
+
+async function onUnlike(next) {
+  try {
+    await Article.findByIdAndUpdate(this.articleId, {
+      $pull: {
+        likes: this._id,
+      },
+    });
+  } catch (error) {
+    throw error;
+  } finally {
+    next();
+  }
+}
 
 export default Like;

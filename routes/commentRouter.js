@@ -11,7 +11,7 @@ export const commentRouter = Router();
 commentRouter.get("/:articleId", getCommentsByArticleId);
 commentRouter.post("/", auth.verifyToken, newComment);
 commentRouter.delete(
-  "/:articleId/:commentId",
+  "/:commentId",
   auth.verifyToken,
   deleteCommentById
 );
