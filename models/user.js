@@ -2,6 +2,9 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { jwtSecret } from "../server.config.js";
+import Article from "./article.js";
+import Comment from "./comment.js";
+import Like from "./like.js";
 
 const userSchema = new Schema(
   {
@@ -21,6 +24,7 @@ const userSchema = new Schema(
 
 // hooks
 userSchema.pre("save", hashPassword);
+userSchema.pre("findOneAndDelete", onDeleteUser);
 
 // user related methods
 userSchema.methods.verifyPassword = verifyPassword;
@@ -52,6 +56,19 @@ async function generateToken() {
   } catch (error) {
     console.log("Error generating token: ", error);
     throw error;
+  }
+}
+
+async function onDeleteUser(next) {
+  try {
+    await Article.deleteMany({ author: this._id });
+    await Comment.deleteMany({ author: this._id });
+    await Like.deleteMany({ authorId: this._id });
+  } catch (error) {
+    console.log("Error deleting referenced documents on user: ", error);
+    throw error;
+  } finally {
+    next();
   }
 }
 

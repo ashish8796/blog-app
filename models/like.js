@@ -7,7 +7,7 @@ const likeSchema = new Schema(
       ref: "Article",
     },
 
-    userId: {
+    authorId: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },

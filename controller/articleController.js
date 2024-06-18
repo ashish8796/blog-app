@@ -35,7 +35,7 @@ export async function getArticleById(req, res) {
 
 export async function createArticle(req, res) {
   setResponseHeaders(res);
-  const { body } = req;
+  const { body, user } = req;
 
   try {
     const article = await Article.create(body);

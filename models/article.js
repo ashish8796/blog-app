@@ -1,4 +1,6 @@
 import mongoose, { Schema } from "mongoose";
+import Comment from "./comment.js";
+import Like from "./like.js";
 
 const articleSchema = new Schema(
   {
@@ -15,6 +17,20 @@ const articleSchema = new Schema(
   { timestamps: true }
 );
 
+articleSchema.pre("findOneAndDelete", onDeleteArticle);
+
 const Article = mongoose.model("Article", articleSchema);
+
+async function onDeleteArticle(next) {
+  try {
+    await Comment.deleteMany({ articleId: this._id });
+    await Like.deleteMany({ articleId: this._id });
+  } catch (error) {
+    console.log("Error deleting referenced documents on article: ", error);
+    throw error;
+  } finally {
+    next();
+  }
+}
 
 export default Article;
