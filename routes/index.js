@@ -13,4 +13,8 @@ router.use("/comments", commentRouter);
 router.use("/tags", tagRouter);
 router.use("/likes", likeRouter);
 
+router.use("/", (req, res) => {
+  res.send("Welcome to blog app.")
+})
+
 export default router;
