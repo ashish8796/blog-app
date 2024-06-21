@@ -1,12 +1,11 @@
 import dotenv from "dotenv";
+import path from "path";
 
-// Load environment variables from .env file
-dotenv.config({
-  path:
-    process.env.NODE_ENV === "production"
-      ? ".env.production"
-      : ".env.development",
-});
+// Set the path to the appropriate environment file
+const envPath = `./.env.${process.env.NODE_ENV}`;
+
+// Load environment variables
+dotenv.config({ path: envPath });
 
 export const port = process.env.PORT;
 export const dbUsername = process.env.DB_USERNAME;
