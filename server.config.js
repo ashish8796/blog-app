@@ -1,16 +1,10 @@
 import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-
-// Convert import.meta.url to a file path
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Set the path to the appropriate environment file
 const envPath = `./.env.${process.env.NODE_ENV}`;
 
 // Load environment variables
-dotenv.config({ path: path.resolve(__dirname, envPath) });
+dotenv.config({ path: envPath });
 
 export const port = process.env.PORT;
 export const dbUsername = process.env.DB_USERNAME;

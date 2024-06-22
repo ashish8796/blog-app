@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import { dbPassword, dbUsername } from "./server.config.js";
 
 export default async function connectToDb() {
-  console.log({ dbPassword, dbUsername });
   try {
     console.log("Connecting to database.");
     await mongoose.connect(
