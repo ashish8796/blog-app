@@ -1,0 +1,9 @@
+model Like {
+  id        String   @id @default(uuid())
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String   @unique
+  article   Article  @relation(fields: [articleId], references: [id])
+  articleId String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}

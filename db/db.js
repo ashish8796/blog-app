@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { dbPassword, dbUsername } from "./server.config.js";
+import { dbPassword, dbUsername } from "../server.config.js";
+
 
 export default async function connectToDb() {
   try {
