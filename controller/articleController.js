@@ -2,25 +2,29 @@ import {
   handleRequest,
   handleRequestWithoutBody,
 } from "../helper/requestHelper.js";
-import Article from "../models/article.js";
+import { prisma } from "../server.config.js";
 
 export async function getArticles(req, res) {
   handleRequest(req, res, async () => {
-    return await Article.find({}).lean(true);
+    return await prisma.article.findMany();
   });
 }
 
 export async function getArticleById(req, res) {
   handleRequest(req, res, async (req) => {
     const { id } = req.params;
-    return await Article.findById(id).lean().populate("comments").exec();
+    return await prisma.article.findUnique({
+      where: {
+        id,
+      },
+    });
   });
 }
 
 export async function createArticle(req, res) {
   handleRequest(req, res, async (req) => {
     const { body } = req;
-    return await Article.create(body);
+    return await prisma.article.create({ data: body });
   });
 }
 
@@ -28,8 +32,11 @@ export async function updateArticle(req, res) {
   handleRequest(req, res, async (req) => {
     const { body } = req;
     const { id } = req.params;
-    return await Article.findByIdAndUpdate(id, body, {
-      new: true,
+    return await prisma.article.update({
+      where: {
+        id,
+      },
+      data: body,
     });
   });
 }
@@ -37,6 +44,10 @@ export async function updateArticle(req, res) {
 export async function deleteArticle(req, res) {
   handleRequestWithoutBody(req, res, async (req) => {
     const { id } = req.params;
-    return await Article.findByIdAndDelete(id);
+    return await prisma.article.delete({
+      where: {
+        id,
+      },
+    });
   });
 }
