@@ -18,7 +18,7 @@ async function verifyToken(req, res, next) {
     }
   } catch (error) {
     console.log("Error verify token: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Bad Authorization" });
   }
 }
 
