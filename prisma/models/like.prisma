@@ -1,6 +1,6 @@
 model Like {
   id        String   @id @default(uuid())
-  authorId  String   @unique
+  authorId  String
   articleId String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())

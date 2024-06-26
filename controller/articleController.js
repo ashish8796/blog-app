@@ -6,7 +6,11 @@ import { prisma } from "../server.config.js";
 
 export async function getArticles(req, res) {
   handleRequest(req, res, async () => {
-    return await prisma.article.findMany();
+    return await prisma.article.findMany({
+      include: {
+        likes: true
+      }
+    });
   });
 }
 
