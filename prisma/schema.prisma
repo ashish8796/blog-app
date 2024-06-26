@@ -3,10 +3,10 @@ model Article {
   title       String
   description String?
   tags        ArticleTag[]
-  author      User         @relation(fields: [authorId], references: [id])
-  authorId    String
   comments    Comment[]
   likes       Like[]
+  authorId    String
+  author      User         @relation(fields: [authorId], references: [id])
 }
 
 model ArticleTag {
@@ -14,8 +14,8 @@ model ArticleTag {
   articleId String
   tagId     String
 
-  article Article @relation(fields: [articleId], references: [id])
-  tag     Tag     @relation(fields: [tagId], references: [id])
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@unique([articleId, tagId])
 }
@@ -23,10 +23,11 @@ model ArticleTag {
 model Comment {
   id        String  @id @default(uuid())
   content   String?
-  author    User    @relation(fields: [authorId], references: [id])
   authorId  String
-  article   Article @relation(fields: [articleId], references: [id])
   articleId String
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  author  User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
 
 datasource db {
@@ -39,12 +40,13 @@ generator client {
 }
 model Like {
   id        String   @id @default(uuid())
-  author    User     @relation(fields: [authorId], references: [id])
   authorId  String   @unique
-  article   Article  @relation(fields: [articleId], references: [id])
   articleId String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  author  User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
 
 model Tag {
@@ -61,8 +63,8 @@ model User {
   email     String    @unique
   password  String?
   articles  Article[]
-  likes     Like[]
   comments  Comment[]
+  likes     Like[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
 }

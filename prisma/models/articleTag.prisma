@@ -3,8 +3,8 @@ model ArticleTag {
   articleId String
   tagId     String
 
-  article Article @relation(fields: [articleId], references: [id])
-  tag     Tag     @relation(fields: [tagId], references: [id])
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@unique([articleId, tagId])
 }

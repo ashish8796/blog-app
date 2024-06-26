@@ -4,8 +4,8 @@ model User {
   email     String    @unique
   password  String?
   articles  Article[]
-  likes     Like[]
   comments  Comment[]
+  likes     Like[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
 }

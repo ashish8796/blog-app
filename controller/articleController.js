@@ -17,6 +17,15 @@ export async function getArticleById(req, res) {
       where: {
         id,
       },
+      include: {
+        comments: {
+          include: {
+            author: true,
+          },
+        },
+        likes: true,
+        tags: true,
+      },
     });
   });
 }
@@ -32,11 +41,37 @@ export async function updateArticle(req, res) {
   handleRequest(req, res, async (req) => {
     const { body } = req;
     const { id } = req.params;
+    const { likes, comments, tags, ...rest } = body;
+    const updateData = { ...rest };
+
+    if (comments && comments.length > 0) {
+      updateData.comments = {
+        connect: comments.map((commentId) => ({ id: commentId })),
+      };
+    }
+
+    if (likes && likes.length > 0) {
+      updateData.likes = {
+        connect: likes.map((commentId) => ({ id: commentId })),
+      };
+    }
+
+    if (tags && tags.length > 0) {
+      updateData.tags = {
+        connect: tags.map((commentId) => ({ id: commentId })),
+      };
+    }
+
     return await prisma.article.update({
       where: {
         id,
       },
-      data: body,
+      data: updateData,
+      include: {
+        comments: true,
+        likes: true,
+        tags: true,
+      },
     });
   });
 }
