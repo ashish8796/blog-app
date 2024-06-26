@@ -1,0 +1,10 @@
+model Article {
+  id          String       @id @default(uuid())
+  title       String
+  description String?
+  tags        ArticleTag[]
+  author      User         @relation(fields: [authorId], references: [id])
+  authorId    String
+  comments    Comment[]
+  likes       Like[]
+}

@@ -1,0 +1,10 @@
+model ArticleTag {
+  id        String @id @default(uuid())
+  articleId String
+  tagId     String
+
+  article Article @relation(fields: [articleId], references: [id])
+  tag     Tag     @relation(fields: [tagId], references: [id])
+
+  @@unique([articleId, tagId])
+}
