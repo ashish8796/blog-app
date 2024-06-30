@@ -1,14 +1,35 @@
-import mongoose from "mongoose";
-import { dbPassword, dbUsername } from "./server.config.js";
+import postgres from "postgres";
+import {
+  endpointId,
+  pgDatabase,
+  pgHost,
+  pgPassword,
+  pgUser,
+} from "./server.config.js";
+import createTables from "./models/sql.js";
 
-export default async function connectToDb() {
-  try {
-    console.log("Connecting to database.");
-    await mongoose.connect(
-      `mongodb+srv://${dbUsername}:${dbPassword}@blog-app.vc0zjkd.mongodb.net/blog-app`
-    );
-    console.log("Connected to database.");
-  } catch (err) {
-    console.log(err);
-  }
+const sql = postgres({
+  host: pgHost,
+  database: pgDatabase,
+  username: pgUser,
+  password: pgPassword,
+  ssl: "require",
+  connection: {
+    options: `project=${endpointId}`,
+  },
+});
+
+async function getPgVersion() {
+  const result = await sql`select version()`;
+  console.log(result);
 }
+
+export async function connectToDb() {
+  console.log("Connecting to database.");
+  await getPgVersion();
+  console.log("Connected to database.");
+
+  await createTables();
+}
+
+export default sql;

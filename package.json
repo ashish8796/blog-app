@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "pm2 start ecosystem.config.cjs --env production",
-    "dev": "cross-env NODE_ENV=development nodemon server.js",
+    "dev": "nodemon server.js",
     "stop": "pm2 stop ecosystem.config.cjs",
     "delete": "pm2 delete ecosystem.config.cjs",
     "restart": "pm2 restart ecosystem.config.cjs"
@@ -27,7 +27,9 @@
     "mongoose": "^8.4.1",
     "morgan": "^1.10.0",
     "node-redis": "^0.1.7",
-    "redis": "^4.6.14"
+    "postgres": "^3.4.4",
+    "redis": "^4.6.14",
+    "uuid": "^10.0.0"
   },
   "type": "module"
 }

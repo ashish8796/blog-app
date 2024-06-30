@@ -1,13 +1,14 @@
+import sql from "../db.js";
 import { setResponseHeaders } from "../helper/headersHelper.js";
 import {
   handleRequest,
   handleRequestWithoutBody,
 } from "../helper/requestHelper.js";
-import User from "../models/user.js";
+import User from "../lib/users.js";
 
 export async function getUsers(req, res) {
   handleRequest(req, res, async () => {
-    return await User.find().lean();
+    return await User.find();
   });
 }
 
