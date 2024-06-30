@@ -4,6 +4,7 @@ import userRouter from "./userRouter.js";
 import { commentRouter } from "./commentRouter.js";
 import { tagRouter } from "./tagRouter.js";
 import { likeRouter } from "./likeRouter.js";
+import authRouter from "./authRouter.js";
 
 const router = Router();
 
@@ -12,9 +13,10 @@ router.use("/users", userRouter);
 router.use("/comments", commentRouter);
 router.use("/tags", tagRouter);
 router.use("/likes", likeRouter);
+router.use("/auth", authRouter);
 
 router.use("/", (req, res) => {
-  res.send("Welcome to blog app.")
-})
+  res.send("Welcome to blog app.");
+});
 
 export default router;

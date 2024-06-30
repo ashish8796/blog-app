@@ -11,6 +11,8 @@ const userSchema = new Schema(
     name: { type: String },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    role: { type: String, enum: ["admin", "user"], required: true },
+    refreshToken: String,
   },
   {
     timestamps: true,
@@ -51,8 +53,8 @@ async function verifyPassword(password) {
 
 async function generateToken() {
   try {
-    const payload = { email: this.email, userId: this._id };
-    return await jwt.sign(payload, jwtSecret);
+    const payload = { email: this.email, userId: this._id, role: this.role };
+    return await jwt.sign(payload, jwtSecret, { expiresIn: "1 min" });
   } catch (error) {
     console.log("Error generating token: ", error);
     throw error;

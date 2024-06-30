@@ -1,9 +1,11 @@
+import jwt from "jsonwebtoken";
 import { setResponseHeaders } from "../helper/headersHelper.js";
 import {
   handleRequest,
   handleRequestWithoutBody,
 } from "../helper/requestHelper.js";
 import User from "../models/user.js";
+import { jwtRefreshSecret } from "../server.config.js";
 
 export async function getUsers(req, res) {
   handleRequest(req, res, async () => {
@@ -29,7 +31,7 @@ export async function registerUser(req, res) {
 
 export async function login(req, res) {
   setResponseHeaders(res);
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
 
   try {
     const user = await User.findOne({ email });
@@ -37,7 +39,19 @@ export async function login(req, res) {
     if (!user || !(await user.verifyPassword(password))) {
       res.status(400).json({ message: "Invalid credentials" });
     } else {
+      // Token Generation
       const token = await user.generateToken();
+
+      // Refresh Token Generation
+      const refreshTokenPayload = { id: user._id, email, role };
+
+      const refreshToken = jwt.sign(refreshTokenPayload, jwtRefreshSecret, {
+        expiresIn: "10 days",
+      });
+
+      user.refreshToken = refreshToken;
+      await user.save();
+
       res.status(200).json({ user, token });
     }
   } catch (error) {
@@ -62,6 +76,7 @@ export async function updateUserById(req, res) {
 }
 
 export async function deleteUserById(req, res) {
+  console.log("Delete User is called.");
   handleRequestWithoutBody(req, res, async () => {
     const { id } = req.params;
     return await User.findByIdAndDelete(id);
