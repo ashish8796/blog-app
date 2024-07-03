@@ -9,7 +9,7 @@ import { jwtRefreshSecret } from "../server.config.js";
 
 export async function getUsers(req, res) {
   handleRequest(req, res, async () => {
-    return await User.find().lean();
+    return await User.find().select("-password -refreshToken").lean();
   });
 }
 
@@ -17,6 +17,7 @@ export async function registerUser(req, res) {
   setResponseHeaders(res);
   try {
     const user = await User.create(req?.body);
+    delete user.password;
     res.status(201).json(user);
   } catch (error) {
     // handling idempotency for user
@@ -24,7 +25,7 @@ export async function registerUser(req, res) {
       res.status(400).json({ message: "user is already exists." });
     } else {
       console.log("Error creating user:", error);
-      res.status(500).json({ message: "Internal Server Error" });
+      res.status(400).json({ message: error.message });
     }
   }
 }
@@ -46,11 +47,13 @@ export async function login(req, res) {
       const refreshTokenPayload = { id: user._id, email, role };
 
       const refreshToken = jwt.sign(refreshTokenPayload, jwtRefreshSecret, {
-        expiresIn: "10 days",
+        expiresIn: "7 days",
       });
 
       user.refreshToken = refreshToken;
       await user.save();
+
+      delete user.password;
 
       res.status(200).json({ user, token });
     }
@@ -76,7 +79,6 @@ export async function updateUserById(req, res) {
 }
 
 export async function deleteUserById(req, res) {
-  console.log("Delete User is called.");
   handleRequestWithoutBody(req, res, async () => {
     const { id } = req.params;
     return await User.findByIdAndDelete(id);

@@ -3,3 +3,4 @@
 /package-lock.json
 /blog-app.pem
 .env.development
+/nginx-config.pem
