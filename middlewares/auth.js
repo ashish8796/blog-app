@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { jwtSecret } from "../server.config.js";
+import { jwtSecret } from "../config/app.config.js";
 
 const auth = {
   verifyToken,

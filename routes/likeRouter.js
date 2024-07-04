@@ -4,5 +4,5 @@ import auth from "../middlewares/auth.js";
 
 export const likeRouter = Router();
 
-likeRouter.post("/", auth.verifyToken, newLike);
-likeRouter.delete("/:articleId/:likeId", auth.verifyToken, deleteLikeById);
+likeRouter.post("/new", auth.verifyToken, newLike);
+likeRouter.delete("/:likeId", auth.verifyToken, deleteLikeById);

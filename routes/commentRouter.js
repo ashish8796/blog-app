@@ -9,9 +9,9 @@ import auth from "../middlewares/auth.js";
 export const commentRouter = Router();
 
 commentRouter.get("/:articleId", getCommentsByArticleId);
-commentRouter.post("/", auth.verifyToken, newComment);
+commentRouter.post("/new", auth.verifyToken, newComment);
 commentRouter.delete(
-  "/:commentId",
+  "/delete/:commentId",
   auth.verifyToken,
   deleteCommentById
 );

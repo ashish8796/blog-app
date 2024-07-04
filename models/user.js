@@ -1,10 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { jwtSecret } from "../server.config.js";
 import Article from "./article.js";
 import Comment from "./comment.js";
 import Like from "./like.js";
+import { jwtSecret } from "../config/app.config.js";
 
 const userSchema = new Schema(
   {

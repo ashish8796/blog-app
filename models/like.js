@@ -18,7 +18,7 @@ const likeSchema = new Schema(
 
 // middleware
 likeSchema.pre("save", onCreateNewLike);
-likeSchema.pre("deleteOne", onUnlike);
+likeSchema.pre("findOneAndDelete", onUnlike);
 
 const Like = mongoose.model("Like", likeSchema);
 

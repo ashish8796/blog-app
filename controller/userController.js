@@ -5,7 +5,7 @@ import {
   handleRequestWithoutBody,
 } from "../helper/requestHelper.js";
 import User from "../models/user.js";
-import { jwtRefreshSecret } from "../server.config.js";
+import { jwtRefreshSecret, testUserId } from "../config/app.config.js";
 
 export async function getUsers(req, res) {
   handleRequest(req, res, async () => {
@@ -67,20 +67,35 @@ export async function getUserById(req, res) {
   handleRequest(req, res, async (req) => {
     const { id } = req.params;
 
-    return await User.findById(id).lean();
+    return await User.findById(id).lean().select("-password");
   });
 }
 
 export async function updateUserById(req, res) {
   handleRequest(req, res, async (req) => {
     const { id } = req.params;
-    return await User.findByIdAndUpdate(id, body, { new: true }).lean(); // lean() === lean(true);
+    console.log({ id, testUserId });
+    if (id === testUserId) {
+      return { message: "Test user can't be updated." };
+    }
+    return await User.findByIdAndUpdate(id, req.body, { new: true }).lean(); // lean() === lean(true);
   });
 }
 
 export async function deleteUserById(req, res) {
-  handleRequestWithoutBody(req, res, async () => {
-    const { id } = req.params;
-    return await User.findByIdAndDelete(id);
-  });
+  const { id } = req.params;
+  console.log({ id, testUserId });
+  try {
+    if (id === testUserId) {
+      return res.status(200).json({ message: "Test user can't be deleted." });
+    }
+    const user = await User.findByIdAndDelete(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    res.status(204).end();
+  } catch (error) {
+    console.log("Error deleting user: ", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 }

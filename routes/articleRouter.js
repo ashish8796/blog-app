@@ -12,6 +12,6 @@ export const articleRouter = Router();
 
 articleRouter.get("/", getArticles);
 articleRouter.get("/:id", getArticleById);
-articleRouter.post("/", auth.verifyToken, createArticle);
-articleRouter.put("/:id", auth.verifyToken, updateArticle);
-articleRouter.delete("/:id", auth.verifyToken, deleteArticle);
+articleRouter.post("/new", auth.verifyToken, createArticle);
+articleRouter.put("/update/:id", auth.verifyToken, updateArticle);
+articleRouter.delete("/delete/:id", auth.verifyToken, deleteArticle);

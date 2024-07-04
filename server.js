@@ -1,8 +1,8 @@
 import express from "express";
 import morgan from "morgan";
-import { port } from "./server.config.js";
-import connectToDb from "./db.js";
+import { port } from "./config/server.config.js";
 import router from "./routes/index.js";
+import connectToDb from "./config/db.config.js";
 
 const app = express();
 

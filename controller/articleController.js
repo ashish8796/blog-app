@@ -1,3 +1,4 @@
+import { testArticleId } from "../config/app.config.js";
 import {
   handleRequest,
   handleRequestWithoutBody,
@@ -13,15 +14,27 @@ export async function getArticles(req, res) {
 export async function getArticleById(req, res) {
   handleRequest(req, res, async (req) => {
     const { id } = req.params;
-    return await Article.findById(id).lean().populate("comments").exec();
+    return await Article.findById(id)
+      .lean()
+      .populate("comments")
+      .populate("likes")
+      .exec();
   });
 }
 
 export async function createArticle(req, res) {
-  handleRequest(req, res, async (req) => {
-    const { body } = req;
-    return await Article.create(body);
-  });
+  try {
+    const { body, user } = req;
+
+    if (body.author == user.userId) {
+      const article = await Article.create(body);
+      res.status(201).json(article);
+    } else {
+      res.status(401).json({ message: "Unauthorized" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 export async function updateArticle(req, res) {
@@ -35,8 +48,21 @@ export async function updateArticle(req, res) {
 }
 
 export async function deleteArticle(req, res) {
-  handleRequestWithoutBody(req, res, async (req) => {
+  try {
     const { id } = req.params;
-    return await Article.findByIdAndDelete(id);
-  });
+    if (id === testArticleId) {
+      return res
+        .status(200)
+        .json({ message: "Test article can't not be deleted." });
+    }
+
+    const article = await Article.findByIdAndDelete(id);
+    if (!article) {
+      return res.status(404).json({ message: "Article not found." });
+    }
+
+    res.status(200).json({ message: "Article deleted." });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
