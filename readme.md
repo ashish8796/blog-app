@@ -1,25 +1,21 @@
-Blog App
-**Overview of the App
+# Node.js Blog App API
 
-**The Node.js Blog App API is designed to facilitate the creation and management of blog posts or articles. This API supports various key features, including:
+## Overview of the App
 
-Authentication and Authorization: Ensures secure access and operations.
+The Node.js Blog App API is designed to facilitate the creation and management of blog posts or articles. This API supports various key features, including:
 
-Comments on Blog Posts: Allows users to engage with articles.
+- **Authentication and Authorization**: Ensures secure access and operations.
+- **Comments on Blog Posts**: Allows users to engage with articles.
+- **Likes on Blog Posts**: Enables users to like their favorite posts.
+- **Security**: The app supports token and refresh token mechanisms to enhance security.
 
-Likes on Blog Posts: Enables users to like their favorite posts.
+## Postman Collection
 
-Security: The app supports token and refresh token mechanisms to enhance security.
+This Postman collection includes 20 endpoints categorized into four main sections:
 
-**Postman Collection
+- **User Management**: Handling user registration, login, and profile updates.
+- **Blog Post Management**: Creating, updating, retrieving, and deleting blog posts.
+- **Comments on Blogs**: Managing comments on blog posts.
+- **Likes on Blogs**: Managing likes on blog posts.
 
-**This Postman collection includes 20 endpoints categorized into four main sections:
-
-User Management: Handling user registration, login, and profile updates.
-
-Blog Post Management: Creating, updating, retrieving, and deleting blog posts.
-
-Comments on Blogs: Managing comments on blog posts.
-
-Likes on Blogs: Managing likes on blog posts.
-
+You can access the full Postman collection [here](https://documenter.getpostman.com/view/14624922/2sA3dygqZX).
