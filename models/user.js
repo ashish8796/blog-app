@@ -54,7 +54,7 @@ async function verifyPassword(password) {
 async function generateToken() {
   try {
     const payload = { email: this.email, userId: this._id, role: this.role };
-    return await jwt.sign(payload, jwtSecret, "2 mins");
+    return await jwt.sign(payload, jwtSecret, { expiresIn: "2 mins" });
   } catch (error) {
     console.log("Error generating token: ", error);
     throw error;
